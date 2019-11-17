@@ -1,3 +1,27 @@
+__author__ = "Bethany Ebel and Brittame Srivas"
+
+"""
+Round To One with Capital One
+
+For every transaction made on a Capital One credit card account, we calculate the round-up value to the nearest pound 
+and return this donation value plus a charitable organisation that fit the customer's specified criteria. 
+
+Additionally, we assess the risk score of the account holder. If the customer has a good risk score, we provide the 
+above mentioned service. If the customer has a bad risk score, we suggest money management advice services they could
+benefit from.
+
+API's used:
+Capital One: https://developer.capitalone.co.uk/api/customer/index.html#introduction
+CharityBase: https://charitybase.uk/api-portal
+
+All code below relating to Capital One's API written by Brittame Srivas
+All code below relating to CharityBase API written by Bethany Ebel
+
+We welcome any feedback/ comments!
+
+Created on 16/11/2019
+"""
+
 import requests
 import math
 from decimal import *
@@ -126,9 +150,13 @@ def find_charitybase_searchterm(charity_cause):
     return search_term
 
 
-# Finds most relevant charities for search
 def findCharity(searchTerm, number):
-    #  Number specifies how many charities to find
+    """
+    Find most relevant charities in CharityBase for a given search term.
+    :param searchTerm:
+    :param number: number of charities to display which match the search term
+    :return:
+    """
     
     request_header_dict = {
     'Authorization': 'Apikey 1c6a358a-6144-4669-a985-90a0488d15a7'
@@ -211,7 +239,7 @@ if customer_type == "donator":
             findCharity(charitybase_searchterm, 1)
         else:  
             print("Possible donation amount: ", donation_amount)
-            print("No donation made - possible donation amount > round-up limit")
+            print("No donation made because possible donation amount > round-up limit")
 elif customer_type == "advisee":
     charitybase_searchterm = "Frontline Debt Advice"
     findCharity(charitybase_searchterm, 1)
