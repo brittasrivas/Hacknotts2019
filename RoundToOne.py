@@ -1,4 +1,3 @@
-
 import requests
 import math
 from decimal import *
@@ -20,15 +19,13 @@ def check_risk_score(account_id):
     risk_score = account_output['Accounts'][0]['riskScore']
     #print(account_output)
     print("Account risk score is: ", risk_score)
-
-    # TODO CHECK RISKSCORE TOLERANCE
+    
     if int(risk_score) > 70:
         customer_type = "advisee"
     else:
         customer_type = "donator"
 
     return customer_type
-
 
 
 def create_transaction(account_id):
@@ -86,7 +83,6 @@ def find_donation_amount(account_id, transaction_id):
 
     else:
         print("Transaction status is not successful yet or not a GBP account. So not eligible for donation.")
-
 
 
 def get_customer_area(account_id):
@@ -154,7 +150,7 @@ def findCharity(searchTerm, number):
         itemName = item['names'][0]['value']
         itemSummary = item['activities']
         itemRegion = item['geo']['region']
-        print("Charity: {} \nCharity Commission ID: {}\nRegion: {} \
+        print("\nCharity: {} \nCharity Commission ID: {}\nRegion: {} \
               \nDescription: \n{}\n".format(itemName, itemId, itemRegion, \
               itemSummary))
 
@@ -186,7 +182,7 @@ accounts_output = accounts_get_response.json()
 #print(accounts_output)
 
 # SET ACCOUNT ID
-account_id = accounts_output['Accounts'][0]['accountId']
+account_id = accounts_output['Accounts'][1]['accountId']
 print("Account ID is: ", account_id)
 
 customer_area = get_customer_area(account_id)
@@ -197,14 +193,14 @@ transaction_id = create_transaction(account_id)
 
 
 customer_type = check_risk_score(account_id)
-print("Customer type is: ", customer_type)
+print("Customer type is: ", customer_type, "\n")
 
 
 
 if customer_type == "donator":
     roundup_limits = [0.01, 0.02, 0.05, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90]
     roundup_limit = roundup_limits[random.randint(0,len(roundup_limits)-1)]
-    print("Customer's round-up limit is: ",roundup_limit)   
+    print("Customer's round-up limit is: ",roundup_limit, "\n")   
     donation_amount = find_donation_amount(account_id, transaction_id)
     if (donation_amount != None):
         if (donation_amount < roundup_limit):
@@ -213,22 +209,10 @@ if customer_type == "donator":
             charitybase_searchterm = find_charitybase_searchterm(charity_cause)
             print("Chosen charitable cause is: ", charitybase_searchterm)
             findCharity(charitybase_searchterm, 1)
-        else:
-            print("No donation made - roundup value was too large")
+        else:  
+            print("Possible donation amount: ", donation_amount)
+            print("No donation made - possible donation amount > round-up limit")
 elif customer_type == "advisee":
     charitybase_searchterm = "Frontline Debt Advice"
     findCharity(charitybase_searchterm, 1)
-
-
-
-effectiveCharities = ['Malaria Consortium','The Against Malaria Foundation'\
-                      'The End Fund', 'Givedirectly']
-
-
-
-
-
-
-
-
 
